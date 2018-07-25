@@ -40,10 +40,12 @@ public class DemoOmnibot extends OpMode {
         double leftStickY = gamepad1.left_stick_y;
         double leftStickX = gamepad1.left_stick_x;
         //rotation for robot input
-        double rightStickX = gamepad1.left_stick_x;
+        double rightStickX = gamepad1.right_stick_x;
 
         //movement for robot method being run
         omniDrive(leftStickX, leftStickY, rightStickX);
+
+        RobotLog.ii("5040MSGHW","Motors running");
     }
 
 
@@ -52,20 +54,14 @@ public class DemoOmnibot extends OpMode {
     {
 
         //number that slows down the drive train when moving. IT is goign at a third the speed with 3 and so forth
-        int rotat = 3;
+        int rotat = 2;
 
         try {
-            leftMotor1.setPower(limit(((forward - sideways)/rotat) + (-.3 * rotation)));
-            leftMotor2.setPower(limit(((forward + sideways)/rotat) + (-.3 * rotation)));
-            rightMotor1.setPower(limit(((-forward - sideways)/rotat) + (-.3 * rotation)));
-            rightMotor2.setPower(limit(((-forward + sideways)/rotat) + (-.3 * rotation)));
+            leftMotor1.setPower(((forward - sideways)/rotat) + (-.3 * rotation));
+            leftMotor2.setPower(((forward + sideways)/rotat) + (-.3 * rotation));
+            rightMotor1.setPower(((-forward - sideways)/rotat) + (-.3* rotation));
+            rightMotor2.setPower(((-forward + sideways)/rotat) + (-.3 * rotation));
         } catch (Exception e) {
         }
-    }
-
-
-    //limiting method for power to motors
-    public double limit(double a) {
-        return Math.min(Math.max(a, 0), 1);
     }
 }
