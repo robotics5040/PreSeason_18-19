@@ -56,13 +56,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class SpitzTesting extends LinearOpMode {
 
     // Declare OpMode members.
-    private DcMotor motor1 = null;
+    private Servo test = null;
     //@Override
     public void runOpMode() {
-        motor1 = hardwareMap.dcMotor.get("motor1");
+    test = hardwareMap.servo.get("test");
+        test.setPosition(0);
         waitForStart();
+
         while(opModeIsActive()) {
-            motor1.setPower(0.3);
+            //leftMotor.setPower(0.63);
+            test.setPosition(1);
         }
     }
 }

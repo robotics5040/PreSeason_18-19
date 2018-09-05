@@ -6,21 +6,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-@TeleOp(name="Demo Omnibot", group="Iterative Opmode")
+    @TeleOp(name="Demo Omnibot", group="Iterative Opmode")
 //@Disabled
-public class DemoOmnibot extends OpMode {
+    public class DemoOmnibot extends OpMode {
 
     //drive train motors
-    public DcMotor leftMotor1 = null;
-    public DcMotor leftMotor2 = null;
-    public DcMotor rightMotor1 = null;
-    public DcMotor rightMotor2 = null;
+    private DcMotor leftMotor1 = null;
+    private DcMotor leftMotor2 = null;
+    private DcMotor rightMotor1 = null;
+    private DcMotor rightMotor2 = null;
 
     //bumper speed adjustion for master controls
     private double speed = 2;
     private boolean pressed = false;
     private boolean pressed2 = false;
-
+    private boolean pressedA = false;
+    private boolean move = true;
 
     @Override
     public void init() {
@@ -59,6 +60,18 @@ public class DemoOmnibot extends OpMode {
         boolean leftBumper2 = gamepad2.left_bumper;
         boolean rightBumper2 = gamepad2.right_bumper;
 
+        //a input for stopping the robot working for kid TOGGLE
+        boolean a2 = gamepad2.a;
+
+        //toggle to stop robot
+        if(a2 && !pressedA) {
+            move = !move;
+            pressedA = true;
+        }
+        else if(pressedA && !a2) {
+            pressedA = false;
+        }
+
         //slows down robot with master bumper
         if(leftBumper2 && !pressed) {
             speed += 0.2;
@@ -83,7 +96,8 @@ public class DemoOmnibot extends OpMode {
             speed = 1;
         }
 
-        if(leftStick2X == 0 && leftStick2Y == 0 && rightStick2X == 0) {
+        //changing who is driving and move is for stopping kid driving
+        if(leftStick2X == 0 && leftStick2Y == 0 && rightStick2X == 0 && move) {
             leftStickX = leftStick1X;
             leftStickY = leftStick1Y;
             rightStickX = rightStick1X;
@@ -102,18 +116,14 @@ public class DemoOmnibot extends OpMode {
 
 
     //method to move the robot
-    public void omniDrive (double sideways, double forward, double rotation)
+    private void omniDrive (double sideways, double forward, double rotation)
     {
-
-        //number that slows down the drive train when moving. IT is goign at a third the speed with 3 and so forth
-        //double rotat = 2;
-
-        try {
-            leftMotor1.setPower(((forward - sideways)/speed/*rotat*/) + (-.3 * rotation));
-            leftMotor2.setPower(((forward + sideways)/speed/*rotat*/) + (-.3 * rotation));
-            rightMotor1.setPower(((-forward - sideways)/speed/*rotat*/) + (-.3* rotation));
-            rightMotor2.setPower(((-forward + sideways)/speed/*rotat*/) + (-.3 * rotation));
-        } catch (Exception e) {
-        }
+        //try {
+            leftMotor1.setPower(((forward - sideways)/speed) + (-.3 * rotation));
+            leftMotor2.setPower(((forward + sideways)/speed) + (-.3 * rotation));
+            rightMotor1.setPower(((-forward - sideways)/speed) + (-.3* rotation));
+            rightMotor2.setPower(((-forward + sideways)/speed) + (-.3 * rotation));
+        //} catch (Exception e) {
+        //}
     }
 }
